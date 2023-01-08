@@ -14,4 +14,4 @@ if __name__ == "__main__":
         data_ingestion = DataIngestion(data_ingestion_config=data_ingestion_config)
         print(data_ingestion.initiate_data_ingestion())
     except Exception as e:
-        print(e)
+        SensorException(e,sys)

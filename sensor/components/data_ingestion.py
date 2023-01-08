@@ -27,16 +27,18 @@ class DataIngestion:
             logging.info("Save data in feature store")
 
             # replacing na with np.nan
-            df.replace(to_replace="na",value=np.NAN,inplace=True)
+            logging.info("replacing na with np.NAN")
+            df.replace(to_replace='na', value=np.NAN, inplace=True)
+            logging.info("replacing na with np.NAN done")
 
             # saving data in feature store
             logging.info("Create feature store folder if not available")
-            feature_store_dir = self.data_ingestion_config.feature_store_path
-            os.makedirs(feature_store_dir,exist_ok=True)
+            feature_store_path = os.path.dirname(self.data_ingestion_config.feature_store_dir)
+            os.makedirs(feature_store_path,exist_ok=True)
             logging.info("Save df to feature store folder")
 
             # save df to feature store folder
-            df.to_csv(path_or_buf=self.data_ingestion_config.feature_store_file_path,index=False,header=True)
+            df.to_csv(self.data_ingestion_config.feature_store_dir,index=False,header=True)
             
             # split dataset into train and test
             logging.info("split dataset into train and test set")
@@ -51,13 +53,15 @@ class DataIngestion:
             logging.info("create dataset directory folder if not available")
             train_df.to_csv(path_or_buf=self.data_ingestion_config.train_file_path,index=False,header=True)
             test_df.to_csv(path_or_buf=self.data_ingestion_config.test_file_path,index=False,header=True)
+            logging.info("create dataset directory folder done")
 
             #Prepare artifact
             data_ingestion_artifact = artifact_entity.DataIngestionArtifact(
-                feature_store_file_path=self.data_ingestion_config.feature_store_file_path,
+                feature_store_dir=self.data_ingestion_config.feature_store_dir,
                 train_file_path=self.data_ingestion_config.train_file_path, 
                 test_file_path=self.data_ingestion_config.test_file_path)
             logging.info(f"Data ingestion artifact: {data_ingestion_artifact}")
+            logging.info(">>>>>>>>> DATA INGESTION COMPLETED >>>>>>>>>")
 
             return data_ingestion_artifact
 
